@@ -1,0 +1,96 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Report},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifluatex
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\title{Report}
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+\maketitle
+
+\hypertarget{ceci-est-un-test}{%
+\section{Ceci est un test}\label{ceci-est-un-test}}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-1}Main Title\\Subtitle}
+\centering
+\begin{tabular}[t]{l|l|l|l|l|l|l|l}
+\hline
+question & 1600 & 2001 & 3001 & 4001 & 5001 & 7001 & Global\\
+\hline
+Q1 & \makecell[l]{8,8\\81} & \makecell[l]{8,2\\116} & \makecell[l]{8,8\\97} & \makecell[l]{8,5\\452} & \makecell[l]{8,6\\525} & \makecell[l]{8,5\\1259} & \makecell[l]{8,5\\2579}\\
+\hline
+Q2 & \makecell[c]{8,4\\83} & \makecell[c]{8,5\\116} & \makecell[c]{8,8\\98} & \makecell[c]{8,3\\464} & \makecell[c]{8,5\\546} & \makecell[c]{8,4\\1301} & \makecell[c]{8,4\\2662}\\
+\hline
+Q3 & \makecell[r]{8,6\\86} & \makecell[r]{8,3\\116} & \makecell[r]{8,7\\100} & \makecell[r]{7,9\\471} & \makecell[r]{8,4\\539} & \makecell[r]{7,9\\1284} & \makecell[r]{8,1\\2649}\\
+\hline
+Q4 & \makecell[l]{8,8\\84} & \makecell[l]{8,4\\116} & \makecell[l]{8,9\\100} & \makecell[l]{8,3\\473} & \makecell[l]{8,7\\545} & \makecell[l]{8,4\\1294} & \makecell[l]{8,5\\2665}\\
+\hline
+\end{tabular}
+\end{table}
+
+un autre test
+
+\end{document}

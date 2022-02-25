@@ -1,0 +1,8 @@
+source("renv/activate.R")
+renv::restore(prompt = FALSE)
+library(stats)
+library(dplyr)
+library(purrr)
+library(kableExtra)
+library(officer)
+library(flextable)

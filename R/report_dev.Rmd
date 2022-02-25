@@ -1,0 +1,81 @@
+---
+title: "Report"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Ceci est un test
+
+```{r, echo = FALSE, results='asis'}
+options(kableExtra.latex.load_packages = FALSE)
+library(kableExtra)
+
+data_saaq <- readxl::read_excel("data/SAAQCASAV2NBKCOMM.xlsx")
+doc_themes <- readxl::read_excel("data/doc_themes.xlsx")
+
+
+data_saaq[data_saaq == 99] <- NA
+themes_uniques <- unique(doc_themes$Theme)
+
+for(i in 1:length(themes_uniques)){
+  
+  questions_to_keep <- doc_themes %>% 
+    dplyr::filter(Theme == themes_uniques[i]) %>% 
+    pluck("Var")
+  
+  
+  data_specific <- data_saaq %>% 
+    select(VP, all_of(questions_to_keep)) %>% 
+    tidyr::pivot_longer(all_of(questions_to_keep),
+                        names_to = "question",
+                        values_to = "value") %>% 
+    na.omit() %>% 
+    group_by(VP, question) %>% 
+    summarise(moy = round(mean(value),1),
+              n = n(), .groups = "keep") %>% 
+    mutate(moy = paste0(moy, "\n", n)) %>% 
+    mutate(moy = stringr::str_replace(moy, "\\.", ",")) %>% 
+    select(-n) %>% 
+    tidyr::pivot_wider(names_from = VP, values_from = moy) 
+
+  
+  
+  data_global <- data_saaq %>% 
+    mutate(GLOBAL = "Global") %>% 
+    select(GLOBAL, all_of(questions_to_keep)) %>% 
+    tidyr::pivot_longer(all_of(questions_to_keep),
+                        names_to = "question",
+                        values_to = "value") %>% 
+    na.omit() %>% 
+    group_by(GLOBAL, question) %>% 
+    summarise(moy = round(mean(value),1),
+              n = n(),
+              .groups = "keep") %>% 
+    mutate(moy = paste0(moy, "\n", n)) %>% 
+    mutate(moy = stringr::str_replace(moy, "\\.", ",")) %>% 
+    select(-n) %>% 
+    tidyr::pivot_wider(names_from = GLOBAL, values_from = moy) 
+ 
+  
+  
+  my_table <- data_specific %>% 
+    left_join(data_global, by = "question") %>% 
+    ungroup()
+  
+    k <- my_table %>%
+      mutate_all(linebreak) %>% 
+    kable("latex", escape = F,
+          caption = "Main Title\\\\Subtitle")
+      
+
+    print(k)
+        
+}
+
+```
+
+un autre test
