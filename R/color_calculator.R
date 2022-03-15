@@ -7,7 +7,7 @@ data_specific_color <- data_filtre %>%
                       names_to = "question",
                       values_to = "value") %>% 
   
-  left_join(doc_names, by = c("UA" = "Value")) %>% 
+  left_join(doc_names %>% dplyr::filter(Var == doc_filtres$UA[j]), by = c("UA" = "Value")) %>% 
   
   na.omit() %>% 
   group_by(Label, question) %>% 
@@ -24,7 +24,6 @@ data_specific_color <- data_filtre %>%
   tidyr::pivot_wider(names_from = Label, values_from = moy)
 
 
-data_specific_color[is.na(data_specific_color)] <- "#000000"
 
 # Calcul global -----------------------------------------------------------
 
@@ -50,6 +49,28 @@ data_global_global <- data_filtre %>%
     TRUE ~ "#638475")) %>% 
   tidyr::pivot_wider(names_from = GLOBAL, values_from = moy) 
 
+#Fix pour les cas où on est incapable d'avoir des moyennes (n trop bas)
+
+if(nrow(data_specific_color) == 0 & nrow(data_global_global) == 0){
+  
+  
+  colnames_fake <- data_filtre %>% 
+    count(UA) %>% 
+    filter(n > 5) %>% 
+    left_join(doc_names %>% dplyr::filter(Var == doc_filtres$UA[j]), by = c("UA" = "Value")) %>% 
+    pull("Label")
+  
+  data_specific_color <- tibble(question = "Q9999")
+  
+  data_specific_color[[colnames_fake]] <- NA
+
+  
+  data_global_global <- tibble(question = "Q9999",
+                        Global = NA)
+  
+  
+}
+
 
 data_colors  <- questions_to_keep %>%
   select(-starts_with("Ordre")) %>% 
@@ -60,3 +81,5 @@ data_colors  <- questions_to_keep %>%
   select(` ` = Label,
          everything())
 
+
+data_colors[is.na(data_colors)] <- "#000000"

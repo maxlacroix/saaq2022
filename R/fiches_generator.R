@@ -1,4 +1,22 @@
 my_doc <- read_docx("ref/mod.docx")
+
+
+
+# Section 1 - Taux de réponse et commentaires -----------------------------
+
+
+source("R/taux_rep_commentaires.R", encoding = "UTF-8")
+
+# Section 2 - Faits Saillants ---------------------------------------------
+
+
+source("R/faits_saillants.R", encoding = "UTF-8")
+
+
+
+# Boucle pour générer les 10 thèmes ---------------------------------------
+
+
 for(i in 1:length(themes_uniques)){
 
 
@@ -25,7 +43,7 @@ for(i in 1:length(themes_uniques)){
                         names_to = "question",
                         values_to = "value") %>% 
     
-    left_join(doc_names, by = c("UA" = "Value")) %>% 
+    left_join(doc_names %>% dplyr::filter(Var == doc_filtres$UA[j]), by = c("UA" = "Value")) %>% 
     
     na.omit() %>% 
     group_by(Label, question) %>% 
@@ -36,6 +54,7 @@ for(i in 1:length(themes_uniques)){
     mutate(moy = stringr::str_replace(moy, "\\.", ",")) %>% 
     select(-n) %>% 
     tidyr::pivot_wider(names_from = Label, values_from = moy) 
+
 
 
 # Calcul global -----------------------------------------------------------
@@ -58,8 +77,28 @@ for(i in 1:length(themes_uniques)){
     mutate(moy = stringr::str_replace(moy, "\\.", ",")) %>% 
     select(-n) %>% 
     tidyr::pivot_wider(names_from = GLOBAL, values_from = moy) 
- 
+  
+  #Fix pour les cas où on est incapable d'avoir des moyennes (n trop bas)
+  
+  if(nrow(data_specific) == 0 & nrow(data_global) == 0){
+    
+    
+    colnames_fake <- data_filtre %>% 
+      count(UA) %>% 
+      filter(n > 5) %>% 
+      left_join(doc_names %>% dplyr::filter(Var == doc_filtres$UA[j]), by = c("UA" = "Value")) %>% 
+      pull("Label")
+    
+    data_specific <- tibble(question = "Q9999")
+    
+    data_specific[[colnames_fake]] <- NA
 
+    
+    data_global <- tibble(question = "Q9999",
+                          Global = NA)
+    
+    
+  }
 
 # Joindre et créer la table -----------------------------------------------
 
@@ -85,8 +124,8 @@ for(i in 1:length(themes_uniques)){
     rename_at(.vars = c("Global"), ~ filtre_name)
   
     
-      
-  optimal_width <- 13/ (ncol(ma_table) - 1)
+  if(ncol(ma_table) == 2){optimal_width = 6.5}    
+  if(ncol(ma_table) > 2){optimal_width <- 13/ (ncol(ma_table) - 1)}
   
   
   flex <- flextable(ma_table) %>% 
